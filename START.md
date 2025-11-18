@@ -4,7 +4,7 @@
 
 - Node.js 18+
 - Docker 和 Docker Compose
-- OpenAI API Key
+- AI API Key（OpenAI / DeepSeek / 其他）
 
 ## 启动步骤
 
@@ -14,11 +14,38 @@
 # 复制环境变量模板
 cp .env.example .env
 
-# 编辑 .env 文件，填入你的 OpenAI API Key
+# 编辑 .env 文件，配置 AI 提供商
 nano .env  # 或使用你喜欢的编辑器
 ```
 
-**重要**：必须设置 `OPENAI_API_KEY`
+**配置 AI 提供商**：
+
+#### 方案 A：使用 DeepSeek（推荐国内用户）
+```bash
+AI_PROVIDER=deepseek
+DEEPSEEK_API_KEY=sk-your-key-here
+```
+- 价格便宜（约 OpenAI 的 1/50）
+- 国内访问稳定
+- 注册：https://platform.deepseek.com/
+
+#### 方案 B：使用 OpenAI
+```bash
+AI_PROVIDER=openai
+OPENAI_API_KEY=sk-your-key-here
+```
+- 效果最好，但价格较高
+- 国内需要代理
+
+#### 方案 C：使用其他服务
+```bash
+AI_PROVIDER=custom
+CUSTOM_API_KEY=your-key
+CUSTOM_BASE_URL=https://your-api-endpoint.com
+CUSTOM_MODEL=your-model-name
+```
+
+📖 **详细配置指南**：查看 [AI_PROVIDERS.md](AI_PROVIDERS.md)
 
 ### 2. 启动数据库
 
@@ -108,9 +135,12 @@ npm run dev
 - 查看浏览器控制台的错误信息
 
 ### AI 分析失败
-- 确认 OpenAI API Key 是否有效
-- 检查 API 配额是否充足
-- 查看后端控制台的错误信息
+- 确认 AI API Key 是否有效（检查 `.env` 文件）
+- 检查 API 配额是否充足（余额、限额）
+- DeepSeek: 检查是否已充值
+- OpenAI: 检查是否绑定支付方式
+- 查看后端控制台的详细错误信息
+- 参考：[AI_PROVIDERS.md](AI_PROVIDERS.md)
 
 ## 开发命令
 

@@ -18,7 +18,7 @@
 
 - **前端**: Next.js 14, React, TailwindCSS
 - **后端**: Node.js, Express, PostgreSQL
-- **AI**: OpenAI GPT-4
+- **AI**: 支持多种提供商（OpenAI / DeepSeek / 自定义）
 
 ## 快速开始
 
@@ -30,8 +30,16 @@ docker-compose up -d
 ### 2. 配置环境变量
 ```bash
 cp .env.example .env
-# 编辑 .env 填入你的 OpenAI API Key
+# 编辑 .env 文件，配置 AI 提供商
 ```
+
+**推荐配置（DeepSeek - 国内用户）**：
+```bash
+AI_PROVIDER=deepseek
+DEEPSEEK_API_KEY=sk-your-key-here
+```
+
+💡 **详细配置指南**：查看 [AI_PROVIDERS.md](AI_PROVIDERS.md)
 
 ### 3. 启动后端
 ```bash

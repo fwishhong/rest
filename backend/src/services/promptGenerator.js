@@ -1,14 +1,11 @@
-const OpenAI = require('openai');
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const { getAIClient } = require('./aiClient');
 
 /**
  * 生成角色图像 Prompt
  */
 async function generateCharacterPrompt(character) {
   try {
+    const { client, model } = getAIClient();
     const systemPrompt = `你是一个专业的 AI 绘画 Prompt 工程师，擅长将角色描述转换为高质量的图像生成 Prompt。
 
 要求：
@@ -33,8 +30,8 @@ async function generateCharacterPrompt(character) {
 
 风格：anime, detailed, high quality`;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+    const response = await client.chat.completions.create({
+      model: model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -60,6 +57,7 @@ async function generateCharacterPrompt(character) {
  */
 async function generateScenePrompt(scene, characters) {
   try {
+    const { client, model } = getAIClient();
     const systemPrompt = `你是一个专业的 AI 绘画 Prompt 工程师，擅长将场景描述转换为高质量的图像生成 Prompt。
 
 要求：
@@ -93,8 +91,8 @@ async function generateScenePrompt(scene, characters) {
 
 风格：anime, cinematic, detailed background, high quality`;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+    const response = await client.chat.completions.create({
+      model: model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -120,6 +118,7 @@ async function generateScenePrompt(scene, characters) {
  */
 async function generateAnimationPrompt(scene, imageUrl, targetPlatform = 'runway') {
   try {
+    const { client, model } = getAIClient();
     const systemPrompt = `你是一个专业的视频生成 Prompt 工程师，擅长为 AI 视频生成工具创建 Prompt。
 
 根据不同平台的特点：
@@ -150,8 +149,8 @@ async function generateAnimationPrompt(scene, imageUrl, targetPlatform = 'runway
 3. 描述过渡效果
 4. 保持动画风格一致`;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+    const response = await client.chat.completions.create({
+      model: model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },

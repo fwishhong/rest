@@ -1,14 +1,11 @@
-const OpenAI = require('openai');
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const { getAIClient } = require('./aiClient');
 
 /**
  * 分析小说文本，提取角色、场景、情节
  */
 async function analyzeNovel(content) {
   try {
+    const { client, model } = getAIClient();
     const prompt = `你是一个专业的小说分析助手。请详细分析以下小说文本，提取关键信息。
 
 小说内容：
@@ -53,8 +50,8 @@ ${content}
 4. 按照故事发生顺序组织场景
 5. 只返回 JSON，不要有其他文字`;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+    const response = await client.chat.completions.create({
+      model: model,
       messages: [
         {
           role: 'system',
