@@ -17,17 +17,13 @@
 ## 技术栈
 
 - **前端**: Next.js 14, React, TailwindCSS
-- **后端**: Node.js, Express, PostgreSQL
+- **后端**: Node.js, Express
+- **数据库**: SQLite（默认）/ PostgreSQL（可选）
 - **AI**: 支持多种提供商（OpenAI / DeepSeek / 自定义）
 
 ## 快速开始
 
-### 1. 启动数据库
-```bash
-docker-compose up -d
-```
-
-### 2. 配置环境变量
+### 1. 配置环境变量
 ```bash
 cp .env.example .env
 # 编辑 .env 文件，配置 AI 提供商
@@ -41,7 +37,7 @@ DEEPSEEK_API_KEY=sk-your-key-here
 
 💡 **详细配置指南**：查看 [AI_PROVIDERS.md](AI_PROVIDERS.md)
 
-### 3. 启动后端
+### 2. 启动后端
 ```bash
 cd backend
 npm install

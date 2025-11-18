@@ -47,13 +47,23 @@ CUSTOM_MODEL=your-model-name
 
 📖 **详细配置指南**：查看 [AI_PROVIDERS.md](AI_PROVIDERS.md)
 
-### 2. 启动数据库
+### 2. 数据库配置
+
+**默认使用 SQLite（无需安装，推荐）**
+
+系统默认使用 SQLite，无需任何配置，开箱即用！
+
+如果你想使用 PostgreSQL（可选）：
 
 ```bash
-docker-compose up -d
-```
+# 修改 .env
+USE_SQLITE=false
 
-等待 PostgreSQL 启动（约 10-15 秒），数据库表会自动创建。
+# 启动 PostgreSQL
+docker-compose up -d
+
+# 或查看 DOCKER_INSTALL.md 了解如何安装 PostgreSQL
+```
 
 ### 3. 启动后端
 
@@ -78,6 +88,8 @@ npm run dev
 ### 5. 访问应用
 
 打开浏览器访问：http://localhost:3000
+
+**注意**：首次使用需要配置 AI API Key（见步骤 1）
 
 ## 使用流程
 
@@ -125,9 +137,10 @@ npm run dev
 ## 故障排查
 
 ### 后端无法启动
-- 检查数据库是否正在运行：`docker ps`
-- 检查环境变量是否正确设置
-- 确保端口 3001 没有被占用
+- 检查环境变量是否正确设置（特别是 AI API Key）
+- 确保端口 3001 没有被占用：`lsof -i :3001`
+- 使用 SQLite 无需检查数据库服务
+- 如果使用 PostgreSQL：检查是否正在运行：`docker ps`
 
 ### 前端无法连接后端
 - 确认后端已启动
