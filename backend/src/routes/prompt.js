@@ -26,7 +26,13 @@ router.post('/generate', [
     const scenesResult = await db.query('SELECT * FROM scenes WHERE novel_id = $1 ORDER BY scene_number', [novelId]);
 
     const characters = charactersResult.rows;
-    const scenes = scenesResult.rows;
+    // 将 JSON 字符串转换回数组（兼容 SQLite）
+    const scenes = scenesResult.rows.map(scene => ({
+      ...scene,
+      characters_involved: typeof scene.characters_involved === 'string'
+        ? JSON.parse(scene.characters_involved)
+        : scene.characters_involved
+    }));
 
     // 生成角色 Prompt
     const characterPrompts = [];

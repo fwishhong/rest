@@ -44,9 +44,14 @@ router.post('/analyze', [
     const scenes = [];
     for (let i = 0; i < analysis.scenes.length; i++) {
       const scene = analysis.scenes[i];
+      // 将数组转换为 JSON 字符串（兼容 SQLite）
+      const charactersInvolved = Array.isArray(scene.characters)
+        ? JSON.stringify(scene.characters)
+        : scene.characters;
+
       const sceneResult = await db.query(
         'INSERT INTO scenes (novel_id, scene_number, title, description, location, time_of_day, atmosphere, characters_involved) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-        [novel.id, i + 1, scene.title, scene.description, scene.location, scene.timeOfDay, scene.atmosphere, scene.characters]
+        [novel.id, i + 1, scene.title, scene.description, scene.location, scene.timeOfDay, scene.atmosphere, charactersInvolved]
       );
       scenes.push(sceneResult.rows[0]);
     }
@@ -92,12 +97,20 @@ router.get('/:id', async (req, res, next) => {
     const scenesResult = await db.query('SELECT * FROM scenes WHERE novel_id = $1 ORDER BY scene_number', [id]);
     const plotSegmentsResult = await db.query('SELECT * FROM plot_segments WHERE novel_id = $1 ORDER BY sequence_number', [id]);
 
+    // 将 JSON 字符串转换回数组（兼容 SQLite）
+    const scenes = scenesResult.rows.map(scene => ({
+      ...scene,
+      characters_involved: typeof scene.characters_involved === 'string'
+        ? JSON.parse(scene.characters_involved)
+        : scene.characters_involved
+    }));
+
     res.json({
       success: true,
       data: {
         novel: novelResult.rows[0],
         characters: charactersResult.rows,
-        scenes: scenesResult.rows,
+        scenes: scenes,
         plotSegments: plotSegmentsResult.rows,
       },
     });
