@@ -22,7 +22,7 @@ router.post('/analyze', [
     // 1. 保存小说文本
     const novelResult = await db.query(
       'INSERT INTO novels (project_id, title, content, word_count, analyzed) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [projectId || null, title, content, wordCount, false]
+      [projectId || null, title, content, wordCount, 0]  // false -> 0 (SQLite 兼容)
     );
     const novel = novelResult.rows[0];
 
@@ -67,7 +67,7 @@ router.post('/analyze', [
     }
 
     // 6. 更新小说为已分析
-    await db.query('UPDATE novels SET analyzed = $1 WHERE id = $2', [true, novel.id]);
+    await db.query('UPDATE novels SET analyzed = $1 WHERE id = $2', [1, novel.id]);  // true -> 1 (SQLite 兼容)
 
     res.json({
       success: true,
